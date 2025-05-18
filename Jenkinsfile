@@ -1,6 +1,7 @@
 pipeline {
     agent any
 
+    stages {
         stage('Pull Docker Images') {
             steps {
                 bat 'docker pull rishamk/motobikes-frontend:latest'
