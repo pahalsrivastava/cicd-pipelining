@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone repo') {
+            steps {
+                git 'https://github.com/pahalsrivastava/cicd-pipelining.git'
+            }
+        }
+
+        stage('Pull Docker Images') {
+            steps {
+                bat 'docker pull rishamk/motobikes-frontend:latest'
+                bat 'docker pull rishamk/motobikes-backend:latest'
+            }
+        }
+
+        stage('Stop Old Containers (if running)') {
+            steps {
+                bat 'docker rm -f frontend || exit 0'
+                bat 'docker rm -f backend || exit 0'
+            }
+        }
+
+        stage('Run Frontend & Backend Containers') {
+            steps {
+                bat 'docker run -d --name frontend -p 30323:80 rishamk/motobikes-frontend:latest'
+                bat 'docker run -d --name backend -p 32535:80 rishamk/motobikes-backend:latest'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                bat '''
+                    kubectl apply -f k8s/backend-deployment.yaml
+                    kubectl apply -f k8s/frontend-deployment.yaml
+                    kubectl apply -f k8s/backend-service.yaml
+                    kubectl apply -f k8s/frontend-service.yaml
+                '''
+            }
+        }
+    }
+}
