@@ -1,13 +1,6 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Clone repo') {
-            steps {
-                git 'https://github.com/pahalsrivastava/cicd-pipelining.git'
-            }
-        }
-
         stage('Pull Docker Images') {
             steps {
                 bat 'docker pull rishamk/motobikes-frontend:latest'
