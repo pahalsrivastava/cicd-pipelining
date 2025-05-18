@@ -11,6 +11,7 @@ pipeline {
 
         stage('Stop Old Containers (if running)') {
             steps {
+                // To avoid failure if container doesn't exist, ignore errors
                 bat 'docker rm -f frontend || exit 0'
                 bat 'docker rm -f backend || exit 0'
             }
@@ -26,13 +27,14 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfignew-file', variable: 'KUBECONFIG_FILE')]) {
-                  bat """
+                    bat """
                     set KUBECONFIG=%KUBECONFIG_FILE%
                     kubectl apply -f k8s/backend-deployment.yaml
                     kubectl apply -f k8s/frontend-deployment.yaml
                     kubectl apply -f k8s/backend-service.yaml
                     kubectl apply -f k8s/frontend-service.yaml
                     """
+                }
             }
         }
     }
