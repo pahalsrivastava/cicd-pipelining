@@ -25,11 +25,14 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
-                  bat 'kubectl apply -f k8s/backend-deployment.yaml'
-                  bat 'kubectl apply -f k8s/frontend-deployment.yaml'
-                  bat 'kubectl apply -f k8s/backend-service.yaml'
-                  bat 'kubectl apply -f k8s/frontend-service.yaml'
+                withCredentials([file(credentialsId: 'kubeconfignew-file', variable: 'KUBECONFIG_FILE')]) {
+                  bat """
+                    set KUBECONFIG=%KUBECONFIG_FILE%
+                    kubectl apply -f k8s/backend-deployment.yaml
+                    kubectl apply -f k8s/frontend-deployment.yaml
+                    kubectl apply -f k8s/backend-service.yaml
+                    kubectl apply -f k8s/frontend-service.yaml
+                    """
             }
         }
     }
