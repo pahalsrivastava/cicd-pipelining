@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: your-dockerhub-username/frontend:latest
+        image: rishamk/motobikes-frontend:latest
         ports:
         - containerPort: 3000
