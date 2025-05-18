@@ -20,7 +20,7 @@ pipeline {
         stage('Run Frontend & Backend Containers') {
             steps {
                 bat 'docker run -d --name frontend -p 30323:80 rishamk/motobikes-frontend:latest'
-                bat 'docker run -d --name backend -p 32535:80 rishamk/motobikes-backend:latest'
+                bat 'docker run -d --name backend -p 32535:5555 rishamk/motobikes-backend:latest'
             }
         }
 
